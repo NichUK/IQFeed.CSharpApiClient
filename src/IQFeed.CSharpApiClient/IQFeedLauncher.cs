@@ -12,9 +12,15 @@ namespace IQFeed.CSharpApiClient
     // ReSharper disable once InconsistentNaming
     public static class IQFeedLauncher
     {
-        public static void Start(string login = null, string password = null, string productId = null, string productVersion = null, int connectionTimeoutMs = 100, int retry = 50)
+        private static string _hostname;
+        private static int _adminPort;
+
+        public static void Start(string login = null, string password = null, string productId = null, string productVersion = null, 
+            int connectionTimeoutMs = 100, int retry = 50, string hostnameOverride = IQFeedDefault.Hostname, int adminPortOverride = IQFeedDefault.AdminPort)
         {
             var appSettings = ConfigurationManager.AppSettings;
+            _hostname = hostnameOverride;
+            _adminPort = adminPortOverride;
 
             login = login ??
                     Environment.GetEnvironmentVariable("IQCONNECT_LOGIN") ??
@@ -36,11 +42,14 @@ namespace IQFeed.CSharpApiClient
                              appSettings["IQConnect:product_version"].NullIfEmpty() ??
                              "1.0.0.0";
 
-            var iqConnectParameters = $"-product {productId} -version {productVersion} -login {login} -password {password} -autoconnect";
-            Process.Start("IQConnect.exe", iqConnectParameters);
+            if (hostnameOverride == IQFeedDefault.Hostname)
+            {
+                var iqConnectParameters = $"-product {productId} -version {productVersion} -login {login} -password {password} -autoconnect";
+                Process.Start("IQConnect.exe", iqConnectParameters);
+            }
 
             WaitForAdminPortReady(connectionTimeoutMs, retry);
-            WaitForServerConnectedStatus(IQFeedDefault.Hostname, IQFeedDefault.AdminPort);
+            WaitForServerConnectedStatus(_hostname, _adminPort);
         }
 
         public static void Terminate()
@@ -53,9 +62,9 @@ namespace IQFeed.CSharpApiClient
 
         private static void WaitForAdminPortReady(int connectionTimeoutMs, int retry)
         {
-            var adminPortReady = SocketDiagnostic.IsPortOpen(IQFeedDefault.Hostname, IQFeedDefault.AdminPort, connectionTimeoutMs, retry);
+            var adminPortReady = SocketDiagnostic.IsPortOpen(_hostname, _adminPort, connectionTimeoutMs, retry);
             if (!adminPortReady)
-                throw new Exception($"Can't establish TCP connection with host: {IQFeedDefault.Hostname}:{IQFeedDefault.AdminPort}");
+                throw new Exception($"Can't establish TCP connection with host: {_hostname}:{_adminPort}");
         }
 
         private static void WaitForServerConnectedStatus(string host, int port, int timeoutMs = 10000)
