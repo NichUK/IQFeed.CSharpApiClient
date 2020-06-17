@@ -117,13 +117,20 @@ namespace IQFeed.CSharpApiClient.Socket
                 }
 
                 // don't attempt another receive if socket is already disposed
-                if (_disposed)
+                if (_disposed || !_clientSocket.Connected)
                     return;
 
-                var willRaiseEvent = _clientSocket.ReceiveAsync(e);
-                if (!willRaiseEvent)
+                try
                 {
-                    ProcessReceive(e);
+                    var willRaiseEvent = _clientSocket.ReceiveAsync(e);
+                    if (!willRaiseEvent)
+                    {
+                        ProcessReceive(e);
+                    }
+                }
+                catch(System.ObjectDisposedException exception)
+                {
+                    // Ignore this...
                 }
             }
         }
