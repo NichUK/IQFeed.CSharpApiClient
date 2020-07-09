@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using IQFeed.CSharpApiClient.Common.Exceptions;
@@ -18,13 +19,13 @@ namespace IQFeed.CSharpApiClient.Tests.Integration.Lookup.Historical
 
         public HistoricalFacadeTests()
         {
-            IQFeedLauncher.Start();
+            IQFeedLauncher.Start("487873", "e0i0clmk", "OPUSTECH_INVESTORS_44701", "1.0.0.0", 100, 50, "10.173.19.11");
         }
 
         [SetUp]
         public void SetUp()
         {
-            _lookupClient = LookupClientFactory.CreateNew();
+            _lookupClient = LookupClientFactory.CreateNew("10.173.19.11", IQFeedDefault.LookupPort);
             _lookupClient.Connect();
         }
 
@@ -151,6 +152,26 @@ namespace IQFeed.CSharpApiClient.Tests.Integration.Lookup.Historical
             // no string parameter should contain commas...
             var ex = Assert.ThrowsAsync<IQFeedException>(
                 async () => await _lookupClient.Historical.GetHistoryTickDatapointsAsync("INVALID,SYMBOL,NAME", Datapoints));
+        }
+
+        [Test]
+        public async Task ShouldDownload1MinData()
+        {
+            var startDate = new DateTime(2019, 01, 01);
+            var endDate = new DateTime(2020, 05, 03);
+            try
+            {
+                var symbol = "@EUM20";
+                var dataFile = await _lookupClient.Historical.File.GetHistoryIntervalTimeframeAsync(symbol, 60, startDate, endDate, null, null, null,
+                        IQFeed.CSharpApiClient.Lookup.Historical.Enums.DataDirection.Oldest, null, null, 
+                        IQFeed.CSharpApiClient.Lookup.Historical.HistoricalIntervalType.S, 
+                        null);
+                File.Move(dataFile, $"c:\\temp\\TimData\\{symbol}.csv");
+            }
+            catch (Exception exception)
+            {
+                throw;
+            }
         }
     }
 }
