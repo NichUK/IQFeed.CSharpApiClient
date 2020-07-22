@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -63,7 +64,10 @@ namespace IQFeed.CSharpApiClient.Socket
             }
         }
 
-        public void Disconnect() { Dispose(); }
+        public void Disconnect()
+        {
+            Dispose();
+        }
 
         public void Send(string message)
         {
@@ -117,20 +121,20 @@ namespace IQFeed.CSharpApiClient.Socket
                 }
 
                 // don't attempt another receive if socket is already disposed
-                if (_disposed || !_clientSocket.Connected)
-                    return;
-
-                try
+                if (!_disposed && _clientSocket.Connected)
                 {
-                    var willRaiseEvent = _clientSocket.ReceiveAsync(e);
-                    if (!willRaiseEvent)
+                    try
                     {
-                        ProcessReceive(e);
+                        var willRaiseEvent = _clientSocket.ReceiveAsync(e);
+                        if (!willRaiseEvent)
+                        {
+                            ProcessReceive(e);
+                        }
                     }
-                }
-                catch(System.ObjectDisposedException exception)
-                {
-                    // Ignore this...
+                    catch (ObjectDisposedException exception)
+                    {
+                        Debug.WriteLine(exception.ToString());
+                    }
                 }
             }
         }
