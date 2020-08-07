@@ -13,6 +13,7 @@ namespace IQFeed.CSharpApiClient.Streaming.Level1.Handlers
         public event Action<ErrorMessage> Error;
         public event Action<TimestampMessage> Timestamp;
         public event Action<NewsMessage> News;
+        public event Action<string> Raw;
 
         public void ProcessMessages(byte[] messageBytes, int count)
         {
@@ -26,6 +27,7 @@ namespace IQFeed.CSharpApiClient.Streaming.Level1.Handlers
             for (int i = 0; i < messages.Length; i++)
             {
                 var message = messages[i];
+                Raw?.Invoke(message);
                 switch (messages[i][0])
                 {
                     case 'F': // A fundamental message

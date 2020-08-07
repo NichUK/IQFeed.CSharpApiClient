@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using IQFeed.CSharpApiClient.Extensions;
 using IQFeed.CSharpApiClient.Lookup.Common;
+using IQFeed.CSharpApiClient.Streaming.Common;
 
 namespace IQFeed.CSharpApiClient.Streaming.Level1.Messages
 {
     public abstract class UpdateSummaryMessage
     {
-        public const string UpdateMessageTimeFormat = "HH:mm:ss.ffffff";
+        //public const string UpdateMessageTimeFormat = "HH:mm:ss.ffffff";
+        public const string UpdateMessageTimeFormat = @"hh\:mm\:ss\.ffffff";
 
         public static UpdateSummaryMessage<decimal> ParseDecimal(string message, DynamicFieldsetHandler dynamicFieldsetHandler = null)
         {
@@ -16,7 +18,7 @@ namespace IQFeed.CSharpApiClient.Streaming.Level1.Messages
             var symbol = values[1];                                                                                                                            // field 2
             decimal.TryParse(values[2], NumberStyles.Any, CultureInfo.InvariantCulture, out var mostRecentTrade);                                        // field 71
             int.TryParse(values[3], NumberStyles.Any, CultureInfo.InvariantCulture, out var mostRecentTradeSize);                                           // field 72
-            DateTime.TryParseExact(values[4], UpdateMessageTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var mostRecentTradeTime);
+            EstTimezoneParser.ParseTimeWithZonedDate(values[4], UpdateMessageTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var mostRecentTradeTime);
             int.TryParse(values[5], NumberStyles.Any, CultureInfo.InvariantCulture, out var mostRecentTradeMarketCenter);                                   // field 75
             int.TryParse(values[6], NumberStyles.Any, CultureInfo.InvariantCulture, out var totalVolume);                                                   // field 7
             decimal.TryParse(values[7], NumberStyles.Any, CultureInfo.InvariantCulture, out var bid);                                                    // field 11
@@ -58,7 +60,7 @@ namespace IQFeed.CSharpApiClient.Streaming.Level1.Messages
             var symbol = values[1];                                                                                                                            // field 2
             double.TryParse(values[2], NumberStyles.Any, CultureInfo.InvariantCulture, out var mostRecentTrade);                                        // field 71
             int.TryParse(values[3], NumberStyles.Any, CultureInfo.InvariantCulture, out var mostRecentTradeSize);                                           // field 72
-            DateTime.TryParseExact(values[4], UpdateMessageTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var mostRecentTradeTime);
+            EstTimezoneParser.ParseTimeWithZonedDate(values[4], UpdateMessageTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var mostRecentTradeTime);
             int.TryParse(values[5], NumberStyles.Any, CultureInfo.InvariantCulture, out var mostRecentTradeMarketCenter);                                   // field 75
             int.TryParse(values[6], NumberStyles.Any, CultureInfo.InvariantCulture, out var totalVolume);                                                   // field 7
             double.TryParse(values[7], NumberStyles.Any, CultureInfo.InvariantCulture, out var bid);                                                    // field 11
@@ -100,7 +102,7 @@ namespace IQFeed.CSharpApiClient.Streaming.Level1.Messages
             var symbol = values[1];                                                                                                                            // field 2
             float.TryParse(values[2], NumberStyles.Any, CultureInfo.InvariantCulture, out var mostRecentTrade);                                        // field 71
             int.TryParse(values[3], NumberStyles.Any, CultureInfo.InvariantCulture, out var mostRecentTradeSize);                                           // field 72
-            DateTime.TryParseExact(values[4], UpdateMessageTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var mostRecentTradeTime);
+            EstTimezoneParser.ParseTimeWithZonedDate(values[4], UpdateMessageTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var mostRecentTradeTime);
             int.TryParse(values[5], NumberStyles.Any, CultureInfo.InvariantCulture, out var mostRecentTradeMarketCenter);                                   // field 75
             int.TryParse(values[6], NumberStyles.Any, CultureInfo.InvariantCulture, out var totalVolume);                                                   // field 7
             float.TryParse(values[7], NumberStyles.Any, CultureInfo.InvariantCulture, out var bid);                                                    // field 11

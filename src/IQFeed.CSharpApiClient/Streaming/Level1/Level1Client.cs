@@ -55,6 +55,11 @@ namespace IQFeed.CSharpApiClient.Streaming.Level1
             add => _level1MessageHandler.News += value;
             remove => _level1MessageHandler.News -= value;
         }
+        public event Action<string> Raw
+        {
+            add => _level1MessageHandler.Raw += value;
+            remove => _level1MessageHandler.Raw -= value;
+        }
 
         private readonly SocketClient _socketClient;
         private readonly Level1RequestFormatter _level1RequestFormatter;
