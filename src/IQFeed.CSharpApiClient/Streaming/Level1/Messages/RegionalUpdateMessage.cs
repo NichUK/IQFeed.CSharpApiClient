@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Globalization;
 using IQFeed.CSharpApiClient.Extensions;
+using IQFeed.CSharpApiClient.Streaming.Common;
 
 namespace IQFeed.CSharpApiClient.Streaming.Level1.Messages
 {
     public abstract class RegionalUpdateMessage
     {
-        public const string RegionalUpdateTimeFormat = "HH:mm:ss";
+        //public const string RegionalUpdateTimeFormat = "HH:mm:ss";
+        public const string RegionalUpdateTimeFormat = @"hh\:mm\:ss";
 
         public static RegionalUpdateMessage<decimal> ParseDecimal(string message)
         {
@@ -16,10 +18,10 @@ namespace IQFeed.CSharpApiClient.Streaming.Level1.Messages
             var exchange = values[2];
             decimal.TryParse(values[3], NumberStyles.Any, CultureInfo.InvariantCulture, out var regionalBid);
             int.TryParse(values[4], NumberStyles.Any, CultureInfo.InvariantCulture, out var regionalBidSize);
-            DateTime.TryParseExact(values[5], RegionalUpdateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var regionalBidTime);
+            EstTimezoneParser.ParseTimeWithZonedDate(values[5], RegionalUpdateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var regionalBidTime);
             decimal.TryParse(values[6], NumberStyles.Any, CultureInfo.InvariantCulture, out var regionalAsk);
             int.TryParse(values[7], NumberStyles.Any, CultureInfo.InvariantCulture, out var regionalAskSize);
-            DateTime.TryParseExact(values[8], RegionalUpdateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var regionalAskTime);
+            EstTimezoneParser.ParseTimeWithZonedDate(values[8], RegionalUpdateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var regionalAskTime);
             int.TryParse(values[9], NumberStyles.Any, CultureInfo.InvariantCulture, out var fractionDisplayCode);
             int.TryParse(values[10], NumberStyles.Any, CultureInfo.InvariantCulture, out var decimalPrecision);
             int.TryParse(values[11], NumberStyles.Any, CultureInfo.InvariantCulture, out var marketCenter);
@@ -47,10 +49,10 @@ namespace IQFeed.CSharpApiClient.Streaming.Level1.Messages
             var exchange = values[2];
             double.TryParse(values[3], NumberStyles.Any, CultureInfo.InvariantCulture, out var regionalBid);
             int.TryParse(values[4], NumberStyles.Any, CultureInfo.InvariantCulture, out var regionalBidSize);
-            DateTime.TryParseExact(values[5], RegionalUpdateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var regionalBidTime);
+            EstTimezoneParser.ParseTimeWithZonedDate(values[5], RegionalUpdateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var regionalBidTime);
             double.TryParse(values[6], NumberStyles.Any, CultureInfo.InvariantCulture, out var regionalAsk);
             int.TryParse(values[7], NumberStyles.Any, CultureInfo.InvariantCulture, out var regionalAskSize);
-            DateTime.TryParseExact(values[8], RegionalUpdateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var regionalAskTime);
+            EstTimezoneParser.ParseTimeWithZonedDate(values[8], RegionalUpdateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var regionalAskTime);
             int.TryParse(values[9], NumberStyles.Any, CultureInfo.InvariantCulture, out var fractionDisplayCode);
             int.TryParse(values[10], NumberStyles.Any, CultureInfo.InvariantCulture, out var decimalPrecision);
             int.TryParse(values[11], NumberStyles.Any, CultureInfo.InvariantCulture, out var marketCenter);
@@ -78,10 +80,10 @@ namespace IQFeed.CSharpApiClient.Streaming.Level1.Messages
             var exchange = values[2];
             float.TryParse(values[3], NumberStyles.Any, CultureInfo.InvariantCulture, out var regionalBid);
             int.TryParse(values[4], NumberStyles.Any, CultureInfo.InvariantCulture, out var regionalBidSize);
-            DateTime.TryParseExact(values[5], RegionalUpdateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var regionalBidTime);
+            EstTimezoneParser.ParseTimeWithZonedDate(values[5], RegionalUpdateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var regionalBidTime);
             float.TryParse(values[6], NumberStyles.Any, CultureInfo.InvariantCulture, out var regionalAsk);
             int.TryParse(values[7], NumberStyles.Any, CultureInfo.InvariantCulture, out var regionalAskSize);
-            DateTime.TryParseExact(values[8], RegionalUpdateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var regionalAskTime);
+            EstTimezoneParser.ParseTimeWithZonedDate(values[8], RegionalUpdateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var regionalAskTime);
             int.TryParse(values[9], NumberStyles.Any, CultureInfo.InvariantCulture, out var fractionDisplayCode);
             int.TryParse(values[10], NumberStyles.Any, CultureInfo.InvariantCulture, out var decimalPrecision);
             int.TryParse(values[11], NumberStyles.Any, CultureInfo.InvariantCulture, out var marketCenter);

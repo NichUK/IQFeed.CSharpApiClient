@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IQFeed.CSharpApiClient.Streaming.Common;
+using IQFeed.CSharpApiClient.Streaming.Level2.Messages;
 
 namespace IQFeed.CSharpApiClient.Streaming.Level1
 {
@@ -67,6 +69,22 @@ namespace IQFeed.CSharpApiClient.Streaming.Level1
                     {
                         // if it's a double, then convert to T
                         dynamicFields.Add(dynamicField.ToString(), Convert.ChangeType(value, typeof(T)));
+                    }
+                    else if (fieldsetDescriptor.Type == typeof(TimeSpan))
+                    {
+                        if (!string.IsNullOrEmpty(fieldsetDescriptor.Format))
+                            dynamicFields.Add(dynamicField.ToString(), EstTimezoneParser.ParseTimeWithZonedDate(value, fieldsetDescriptor.Format));
+                        else
+                        {
+                            if (value.StartsWith("99:99:99"))
+                            {
+                                dynamicFields.Add(dynamicField.ToString(), DateTime.MaxValue);
+                            }
+                            else
+                            {
+                                dynamicFields.Add(dynamicField.ToString(), EstTimezoneParser.ParseTimeWithZonedDate(value, Level1.Messages.UpdateSummaryMessage.UpdateMessageTimeFormat));
+                            }
+                        }
                     }
                     else if (fieldsetDescriptor.Type == typeof(DateTime))
                     {

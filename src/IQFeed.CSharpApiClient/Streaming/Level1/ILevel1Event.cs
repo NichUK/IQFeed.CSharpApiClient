@@ -15,5 +15,6 @@ namespace IQFeed.CSharpApiClient.Streaming.Level1
         event Action<UpdateSummaryMessage<T>> Update;
         event Action<RegionalUpdateMessage<T>> Regional;
         event Action<NewsMessage> News;
+        event Action<string> Raw;
     }
 }
